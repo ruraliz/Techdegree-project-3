@@ -66,3 +66,9 @@ selectPaymentMethod.addEventListener('change', ()=> {
         }
     }    
 })
+
+//7
+const form = document.querySelectorAll("form")
+form.addEventListener('submit', ()=> {
+    
+})
