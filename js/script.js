@@ -31,10 +31,10 @@ selectDesign.addEventListener('change', (e)=> {
 const registerActivities = document.getElementById("activities")
 const activityOptionCost= document.querySelectorAll('input[data-cost]')
 const totalCost = document.getElementById("activities-cost")
+const checkbox= document.querySelector('input[text="checkbox"]')
+let finalPrice = 0;
 registerActivities.addEventListener('change', (e)=> {
-    let finalPrice = 0;
     for(i=0; i< activityOptionCost.length; i++){
-        // console.log(parseInt(activityOptionCost[i].getAttribute("data-cost")))
         if(activityOptionCost[i].checked){
            finalPrice = finalPrice + parseInt(activityOptionCost[i].getAttribute("data-cost"))
         }
@@ -68,7 +68,47 @@ selectPaymentMethod.addEventListener('change', ()=> {
 })
 
 //7
-const form = document.querySelectorAll("form")
-form.addEventListener('submit', ()=> {
-    
-})
+const form = document.querySelector("form")
+const nameInput= document.querySelector('input[type="text"]')
+const emailInput= document.querySelector('input[type="email"]')
+const registerCheck = document.querySelector('.activity')
+console.log(registerCheck)
+const errorMessage= document.querySelector('#activities-hint')
+console.log(errorMessage)
+const nameValidator= () => nameInput == "";
+const emailValidator= () => /^[^@]+@[^@.]+\.[a-z]+$/i.test(emailInput.value);
+const CardNumberInput= document.querySelector('input[id="cc-num"]')
+const creditCardValidator = () => /^\d{13,16}$/.test(CardNumberInput.value);
+const zipCodeInput= document.querySelector('input[id="zip"]')
+const zipCodeValidator= () => /^([0-9]{5})$/.test(zipCodeInput.value);
+const cvvInput= document.querySelector('input[id="cvv"]')
+const cvvValidator= () => /^([0-9]{3})$/.test(cvvInput.value)
+form.addEventListener('submit', (e)=> {
+    const validator = (elementInput, validation) => {
+        if(validation()){
+            elementInput.closest('label').className = 'valid';
+            elementInput.nextElementSibling.style.display= "none";
+        } else {
+            e.preventDefault();
+            elementInput.closest('label').className= 'error'
+            elementInput.nextElementSibling.style.display= 'block';
+        }
+    }
+    validator(nameInput, nameValidator);
+    validator(emailInput, emailValidator);
+    validator(zipCodeInput, zipCodeValidator);
+    validator(cvvInput, cvvValidator);
+    if(selectPaymentMethod.value === 'credit-card'){
+        validator(CardNumberInput, creditCardValidator)
+        }
+
+    if(finalPrice == 0){
+        e.preventDefault();
+        registerCheck.className= 'error'
+        errorMessage.style.display= 'block';
+    }else{
+        e.preventDefault();
+        registerCheck.className= 'valid'
+        errorMessage.style.display= 'none';
+    }
+});
