@@ -41,3 +41,28 @@ registerActivities.addEventListener('change', (e)=> {
     }
     totalCost.innerText= "Total: $" + finalPrice
 })
+
+const selectPaymentMethod= document.querySelector('select[id="payment"]')
+selectPaymentMethod.value= document.querySelector('option[value="credit-card"]').value
+creditCardMethod= document.getElementById("credit-card")
+paypalMethod= document.getElementById("paypal")
+paypalMethod.style.display="none"
+bitcoinMethod=document.getElementById("bitcoin")
+bitcoinMethod.style.display="none"
+selectPaymentMethod.addEventListener('change', ()=> {
+    for(i=0; i<selectPaymentMethod.length; i++){
+        if(selectPaymentMethod.value === "paypal" ){
+            paypalMethod.style.display="block"
+            creditCardMethod.style.display= "none"
+            bitcoinMethod.style.display="none"
+        } else if(selectPaymentMethod.value === "bitcoin"){
+            bitcoinMethod.style.display="block"
+            creditCardMethod.style.display= "none"
+            paypalMethod.style.display="none"
+        } else {
+            creditCardMethod.style.display= "block"
+            paypalMethod.style.display="none"
+            bitcoinMethod.style.display="none"
+        }
+    }    
+})
