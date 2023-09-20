@@ -36,9 +36,28 @@ checkboxLabel = document.querySelectorAll('.activities label');
 registerActivities.addEventListener('change', (e)=> {
     let finalPrice= 0;
     for(i=0; i< activityOptionCost.length; i++){
+        const checkedActivity = e.target
+        const checkedActivityDate= checkedActivity.getAttribute('data-day-and-time')
         if(activityOptionCost[i].checked){
+            checkbox.forEach((activityDate) => {
+                const dateCheck = activityDate.getAttribute('data-day-and-time')
+                if(activityDate !== checkedActivity && dateCheck === checkedActivityDate){
+                    activityDate.disabled= true;
+                    activityDate.parentNode.classList.add('disabled')
+                }
+            });
            finalPrice = finalPrice + parseInt(activityOptionCost[i].getAttribute("data-cost")) 
+
+        } else if(!checkedActivity.checked){
+            checkbox.forEach((activityDate) => {
+                const dateCheck = activityDate.getAttribute('data-day-and-time')
+                if(activityDate !== checkedActivity && dateCheck === checkedActivityDate){
+                    activityDate.disabled= false;
+                    activityDate.parentNode.classList.remove('disabled')
+                }
+            });
         }
+
     }
     totalCost.innerText= "Total: $" + finalPrice
 })
