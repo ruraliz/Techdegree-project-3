@@ -31,16 +31,29 @@ selectDesign.addEventListener('change', (e)=> {
 const registerActivities = document.getElementById("activities")
 const activityOptionCost= document.querySelectorAll('input[data-cost]')
 const totalCost = document.getElementById("activities-cost")
-const checkbox= document.querySelector('input[text="checkbox"]')
-let finalPrice = 0;
+const checkbox= document.querySelectorAll('input[type="checkbox"]')
+checkboxLabel = document.querySelectorAll('.activities label');
 registerActivities.addEventListener('change', (e)=> {
+    let finalPrice= 0;
     for(i=0; i< activityOptionCost.length; i++){
         if(activityOptionCost[i].checked){
-           finalPrice = finalPrice + parseInt(activityOptionCost[i].getAttribute("data-cost"))
+           finalPrice = finalPrice + parseInt(activityOptionCost[i].getAttribute("data-cost")) 
         }
     }
     totalCost.innerText= "Total: $" + finalPrice
 })
+
+function checkboxFocus(){
+    for( let i=0; i < checkbox.length; i++){
+        checkbox[i].addEventListener('focus', (e) => {
+            checkboxLabel[i].classList.add('focus')
+        })
+        checkbox[i].addEventListener('blur', (e)=> {
+            checkboxLabel[i].classList.remove('focus')
+        })
+    }
+}
+checkboxFocus();
 
 const selectPaymentMethod= document.querySelector('select[id="payment"]')
 selectPaymentMethod.value= document.querySelector('option[value="credit-card"]').value
@@ -90,7 +103,7 @@ form.addEventListener('submit', (e)=> {
             elementInput.nextElementSibling.style.display= "none";
         } else {
             e.preventDefault();
-            elementInput.closest('label').className= 'error'
+            elementInput.closest('label').className= 'not-valid'
             elementInput.nextElementSibling.style.display= 'block';
         }
     }
@@ -102,9 +115,9 @@ form.addEventListener('submit', (e)=> {
         validator(CardNumberInput, creditCardValidator)
         }
 
-    if(finalPrice == 0){
+    if(totalCost.innerHTML === "Total: $0"){
         e.preventDefault();
-        registerCheck.className= 'error'
+        registerCheck.className= 'not-valid'
         errorMessage.style.display= 'block';
     }else{
         e.preventDefault();
@@ -112,3 +125,5 @@ form.addEventListener('submit', (e)=> {
         errorMessage.style.display= 'none';
     }
 });
+
+
