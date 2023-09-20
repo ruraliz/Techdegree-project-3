@@ -106,11 +106,12 @@ const emailInput= document.querySelector('input[type="email"]')
 const registerCheck = document.querySelector('.activity')
 console.log(registerCheck)
 const errorMessage= document.querySelector('#activities-hint')
+const emailErrorMessage= document.querySelector('#email-hint')
 console.log(errorMessage)
 const nameValidator= () => nameInput == "";
 const emailValidator= () => /^[^@]+@[^@.]+\.[a-z]+$/i.test(emailInput.value);
-const CardNumberInput= document.querySelector('input[id="cc-num"]')
-const creditCardValidator = () => /^\d{13,16}$/.test(CardNumberInput.value);
+const cardNumberInput= document.querySelector('input[id="cc-num"]')
+const creditCardValidator = () =>  /^\d{13,16}$/.test(cardNumberInput.value);
 const zipCodeInput= document.querySelector('input[id="zip"]')
 const zipCodeValidator= () => /^([0-9]{5})$/.test(zipCodeInput.value);
 const cvvInput= document.querySelector('input[id="cvv"]')
@@ -127,13 +128,23 @@ form.addEventListener('submit', (e)=> {
         }
     }
     validator(nameInput, nameValidator);
-    validator(emailInput, emailValidator);
     validator(zipCodeInput, zipCodeValidator);
     validator(cvvInput, cvvValidator);
+    if(emailInput.value === ''){
+        emailErrorMessage.textContent= "Email input box cannot be empty"
+        emailErrorMessage.style.display= "block";
+        emailInput.closest('label').className = 'not-valid';
+    } else if(!emailValidator()){
+        emailErrorMessage.textContent= "Email address must be formatted correctly"
+        emailErrorMessage.style.display= "block";
+        emailInput.closest('label').className = 'not-valid';
+    } else{
+        emailErrorMessage.style.display= "none";
+        emailInput.closest('label').className = 'valid';
+    }
     if(selectPaymentMethod.value === 'credit-card'){
-        validator(CardNumberInput, creditCardValidator)
-        }
-
+        validator(cardNumberInput, creditCardValidator)
+    }
     if(totalCost.innerHTML === "Total: $0"){
         e.preventDefault();
         registerCheck.className= 'not-valid'
