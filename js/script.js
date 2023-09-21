@@ -108,7 +108,7 @@ console.log(registerCheck)
 const errorMessage= document.querySelector('#activities-hint')
 const emailErrorMessage= document.querySelector('#email-hint')
 console.log(errorMessage)
-const nameValidator= () => nameInput == "";
+const nameValidator= () => nameInput.value !== "";
 const emailValidator= () => /^[^@]+@[^@.]+\.[a-z]+$/i.test(emailInput.value); //validation regex for email input. 
 const cardNumberInput= document.querySelector('input[id="cc-num"]')
 const creditCardValidator = () =>  /^\d{13,16}$/.test(cardNumberInput.value); //validation regex for credit card number input.
