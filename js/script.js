@@ -12,18 +12,19 @@ selectJob.addEventListener('change', event => { //event listener to display the 
  })
 
 const selectColor = document.getElementById("shirt-colors") 
-selectColor.style.display = "none" //disables the color selection element.
+const colorSelection = document.getElementById("color") 
+selectColor.style.display = "none" //disables the color selection element while a theme has not been chosen.
 const colorOptions = document.querySelectorAll("option[data-theme]")
 const selectDesign= document.querySelector("#design")
 selectDesign.addEventListener('change', (e)=> { //event listener to show color selection if there is a change in design selection element and show different color options based on design picked.
     selectColor.style.display = "block"
-    for(let i=0; i<colorOptions.length; i++){
-        if(selectDesign.value !== colorOptions[i].getAttribute("data-theme")){
-            colorOptions[i].hidden = true;
-            colorOptions[i].disabled= true;
+    for(let i=0; i<colorSelection.length; i++){
+        if(selectDesign.value === colorSelection[i].getAttribute("data-theme")){
+            colorSelection[i].style.display= '';
+            colorSelection[i].selected= true;
         }else{
-            colorOptions[i].hidden = false;
-            colorOptions[i].disabled = false;
+            colorSelection[i].style.display= "none" 
+            colorSelection[i].selected = false;
         }
     }
 })
