@@ -116,6 +116,22 @@ const zipCodeInput= document.querySelector('input[id="zip"]')
 const zipCodeValidator= () => /^([0-9]{5})$/.test(zipCodeInput.value);
 const cvvInput= document.querySelector('input[id="cvv"]')
 const cvvValidator= () => /^([0-9]{3})$/.test(cvvInput.value)
+const emailLabel= emailInput.closest('label')   
+
+function emailValidation(emailInput, emailErrorMessage, emailLabel){
+    if(emailInput.value === ''){
+        emailErrorMessage.textContent= "Email input box cannot be empty"
+        emailErrorMessage.style.display= "block";
+        emailLabel.className = 'not-valid';
+    } else if(!emailValidator()){
+        emailErrorMessage.textContent= "Email address must be formatted correctly"
+        emailErrorMessage.style.display= "block";
+        emailLabel.className = 'not-valid';
+    } else{
+        emailErrorMessage.style.display= "none";
+        emailLabel.className = 'valid';
+    }
+}
 form.addEventListener('submit', (e)=> {
     const validator = (elementInput, validation) => {
         if(validation()){
@@ -129,19 +145,8 @@ form.addEventListener('submit', (e)=> {
     }
     validator(nameInput, nameValidator);
     validator(zipCodeInput, zipCodeValidator);
-    validator(cvvInput, cvvValidator);
-    if(emailInput.value === ''){
-        emailErrorMessage.textContent= "Email input box cannot be empty"
-        emailErrorMessage.style.display= "block";
-        emailInput.closest('label').className = 'not-valid';
-    } else if(!emailValidator()){
-        emailErrorMessage.textContent= "Email address must be formatted correctly"
-        emailErrorMessage.style.display= "block";
-        emailInput.closest('label').className = 'not-valid';
-    } else{
-        emailErrorMessage.style.display= "none";
-        emailInput.closest('label').className = 'valid';
-    }
+    validator(cvvInput, cvvValidator); 
+    emailValidation(emailInput, emailErrorMessage, emailLabel);
     if(selectPaymentMethod.value === 'credit-card'){
         validator(cardNumberInput, creditCardValidator)
     }
@@ -155,5 +160,9 @@ form.addEventListener('submit', (e)=> {
         errorMessage.style.display= 'none';
     }
 });
+
+emailInput.addEventListener('keyup', ()=>{
+    emailValidation(emailInput, emailErrorMessage, emailLabel)
+})
 
 
