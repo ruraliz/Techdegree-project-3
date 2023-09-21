@@ -105,18 +105,16 @@ const form = document.querySelector("form")
 const nameInput= document.querySelector('input[type="text"]')
 const emailInput= document.querySelector('input[type="email"]')
 const registerCheck = document.querySelector('.activity')
-console.log(registerCheck)
 const errorMessage= document.querySelector('#activities-hint')
 const emailErrorMessage= document.querySelector('#email-hint')
-console.log(errorMessage)
 const nameValidator= () => nameInput.value !== "";
 const emailValidator= () => /^[^@]+@[^@.]+\.[a-z]+$/i.test(emailInput.value); //validation regex for email input. 
 const cardNumberInput= document.querySelector('input[id="cc-num"]')
 const creditCardValidator = () =>  /^\d{13,16}$/.test(cardNumberInput.value); //validation regex for credit card number input.
 const zipCodeInput= document.querySelector('input[id="zip"]')
-const zipCodeValidator= () => /^([0-9]{5})$/.test(zipCodeInput.value); //validation regex for zip code input. 
+const zipCodeValidator= () =>  /^\d{5}$/.test(zipCodeInput.value); //validation regex for zip code input. 
 const cvvInput= document.querySelector('input[id="cvv"]')
-const cvvValidator= () => /^([0-9]{3})$/.test(cvvInput.value)    //validation regex for cvv input. 
+const cvvValidator= () => /^\d{3}$/.test(cvvInput.value)    //validation regex for cvv input. 
 const emailLabel= emailInput.closest('label')   
 
 function emailValidation(emailInput, emailErrorMessage, emailLabel){ //function to check that email input matches the required criteria and if not show appropriate error message. 
@@ -124,13 +122,16 @@ function emailValidation(emailInput, emailErrorMessage, emailLabel){ //function 
         emailErrorMessage.textContent= "Email input box cannot be empty"
         emailErrorMessage.style.display= "block";
         emailLabel.className = 'not-valid';
+        return false;
     } else if(!emailValidator()){
         emailErrorMessage.textContent= "Email address must be formatted correctly"
         emailErrorMessage.style.display= "block";
         emailLabel.className = 'not-valid';
+        return false;
     } else{
         emailErrorMessage.style.display= "none";
         emailLabel.className = 'valid';
+        return true;
     }
 }
 form.addEventListener('submit', (e)=> { //event listener for submiting the whole form , with multiple validation for the required fields, to check if the requirements are not met the form cannot be submitted and appropriate erros are displayed on each field. 
@@ -138,28 +139,40 @@ form.addEventListener('submit', (e)=> { //event listener for submiting the whole
         if(validation()){
             elementInput.closest('label').className = 'valid';
             elementInput.nextElementSibling.style.display= "none";
-        } else {
-            e.preventDefault();
+         } else {
+            e.preventDefault(); //prevents form submission if criterias are not met 
             elementInput.closest('label').className= 'not-valid'
             elementInput.nextElementSibling.style.display= 'block';
         }
-    }
-    validator(nameInput, nameValidator);
-    validator(zipCodeInput, zipCodeValidator);
-    validator(cvvInput, cvvValidator); 
-    emailValidation(emailInput, emailErrorMessage, emailLabel);
-    if(selectPaymentMethod.value === 'credit-card'){
-        validator(cardNumberInput, creditCardValidator)
-    }
-    if(totalCost.innerHTML === "Total: $0"){
+    };
+    validator(nameInput, nameValidator); 
+    const emailValid = emailValidation(emailInput, emailErrorMessage, emailLabel)
+    if(!emailValid){
         e.preventDefault();
+        console.log("prevented")
+        console.log(emailValid)
+    }
+    if(selectPaymentMethod.value === 'credit-card'){
+        validator(zipCodeInput, zipCodeValidator);
+        validator(cvvInput, cvvValidator)
+        if(creditCardValidator()){
+            cardNumberInput.closest('label').className = 'valid';
+            cardNumberInput.nextElementSibling.style.display= "none";
+        }else{
+            e.preventDefault();
+            cardNumberInput.closest('label').className= 'not-valid'
+            cardNumberInput.nextElementSibling.style.display= 'block';
+        }    
+    }
+
+    if(totalCost.innerHTML === "Total: $0"){
+        e.preventDefault()
         registerCheck.className= 'not-valid'
         errorMessage.style.display= 'block';
     }else{
-        e.preventDefault();
         registerCheck.className= 'valid'
         errorMessage.style.display= 'none';
-    }
+    } 
 });
 
 emailInput.addEventListener('keyup', ()=>{ //event listener to check and showcase email input validation requirement in real time as user is inputing information. 
